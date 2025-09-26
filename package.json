@@ -1,0 +1,55 @@
+{
+  "name": "cyberqr",
+  "version": "1.0.0",
+  "description": "Production-ready cybersecurity QR code scanner with gamified education",
+  "private": true,
+  "scripts": {
+    "dev1": "node server.js",
+    "dev": "next dev",
+    "dev:https": "node server.js",
+    "build": "next build",
+    "start": "next start",
+    "start:https": "set NODE_ENV=production && node server.js",
+    "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.2.0",
+    "@lottiefiles/dotlottie-react": "^0.17.1",
+    "clsx": "^2.0.0",
+    "date-fns": "^2.30.0",
+    "firebase": "^10.7.0",
+    "framer-motion": "^10.16.0",
+    "lucide-react": "^0.294.0",
+    "next": "^14.0.0",
+    "pnpm": "^10.17.1",
+    "qr-scanner": "^1.4.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
+    "tailwind-merge": "^2.0.0",
+    "uuid": "^9.0.1",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.0",
+    "@testing-library/react": "^13.4.0",
+    "@types/node": "^20.8.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/uuid": "^9.0.7",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.52.0",
+    "eslint-config-next": "^14.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

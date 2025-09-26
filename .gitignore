@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+
+# SWC build cache
+.swc/
+
+# Cursor editor rules
+.cursor/
+
+#ENV
+
+.env.local
+
+#SSL
+192.168.10.3.pem
+192.168.10.3-key.pem
+
+
+

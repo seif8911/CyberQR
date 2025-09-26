@@ -1,0 +1,58 @@
+{
+  "name": "CyberQR - Secure QR Code Scanner",
+  "short_name": "CyberQR",
+  "description": "Production-ready cybersecurity QR code scanner with gamified education and real-time threat detection.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#333333",
+  "theme_color": "#f9b222",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["security", "education", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot1.png",
+      "sizes": "390x800",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "features": [
+    "QR Code Scanning",
+    "Security Analysis",
+    "Educational Modules",
+    "Gamification",
+    "Offline Support"
+  ],
+  "shortcuts": [
+    {
+      "name": "Quick Scan",
+      "short_name": "Scan",
+      "description": "Start a QR code scan",
+      "url": "/?action=scan",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "ICSA Hub",
+      "short_name": "Learn",
+      "description": "Open educational modules",
+      "url": "/?action=icsa",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}
