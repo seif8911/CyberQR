@@ -12,6 +12,7 @@ export default function StartupAnimation({ onComplete, showGif = true }: Startup
   const [showLoading, setShowLoading] = useState(false);
   const [showSecurityTip, setShowSecurityTip] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [showSkipButton, setShowSkipButton] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
 
@@ -44,6 +45,14 @@ export default function StartupAnimation({ onComplete, showGif = true }: Startup
     setShowLoading(false);
     setShowSecurityTip(false);
     setAnimationComplete(false);
+    setShowSkipButton(false);
+  };
+
+  // Manual skip function
+  const handleSkip = () => {
+    clearAllTimeouts();
+    setAnimationComplete(true);
+    onComplete();
   };
 
   useEffect(() => {
@@ -58,57 +67,100 @@ export default function StartupAnimation({ onComplete, showGif = true }: Startup
 
       const handleVideoEnd = () => {
         if (animationComplete) return; // Prevent overlapping
+        console.log('Video ended, starting loading sequence');
         setShowVideo(false);
         setShowLoading(true);
         
-        // Show loading animation for 2 seconds
+        // Show loading animation for 3 seconds (increased from 2)
         const timer1 = setTimeout(() => {
           if (animationComplete) return; // Prevent overlapping
+          console.log('Showing security tip');
           setShowSecurityTip(true);
           
-          // Complete the animation after showing the tip
+          // Complete the animation after showing the tip for 4 seconds (increased from 3)
           const timer2 = setTimeout(() => {
             if (animationComplete) return; // Prevent overlapping
+            console.log('Animation complete, calling onComplete');
             setAnimationComplete(true);
             onComplete();
-          }, 3000);
+          }, 4000);
           
           timeoutRefs.current.push(timer2);
-        }, 2000);
+        }, 3000);
         
         timeoutRefs.current.push(timer1);
       };
 
-      // Add event listener for video end
+      const handleVideoError = (e: Event) => {
+        console.error('Video error:', e);
+        // If video fails, proceed with loading sequence
+        handleVideoEnd();
+      };
+
+      const handleVideoCanPlay = () => {
+        console.log('Video can play, starting playback');
+        video.play().catch((error) => {
+          console.error('Video play error:', error);
+          // If video can't play, proceed with loading sequence
+          handleVideoEnd();
+        });
+      };
+
+      // Add event listeners
       video.addEventListener('ended', handleVideoEnd);
+      video.addEventListener('error', handleVideoError);
+      video.addEventListener('canplay', handleVideoCanPlay);
       
-      // Start playing the video
-      video.play().catch(console.error);
+      // Set video properties to ensure it plays
+      video.load();
+      video.currentTime = 0;
+
+      // Show skip button after 3 seconds
+      const skipButtonTimer = setTimeout(() => {
+        setShowSkipButton(true);
+      }, 3000);
+      
+      timeoutRefs.current.push(skipButtonTimer);
+
+      // Fallback: if video doesn't start within 8 seconds, proceed anyway
+      const fallbackTimer = setTimeout(() => {
+        if (!animationComplete && showVideo) {
+          console.log('Video fallback triggered, proceeding with animation');
+          handleVideoEnd();
+        }
+      }, 8000);
+      
+      timeoutRefs.current.push(fallbackTimer);
 
       // Cleanup function
       return () => {
         video.removeEventListener('ended', handleVideoEnd);
+        video.removeEventListener('error', handleVideoError);
+        video.removeEventListener('canplay', handleVideoCanPlay);
         clearAllTimeouts();
       };
     } else {
       // For authenticated users: skip video, go straight to loading
+      console.log('Skipping video for authenticated user');
       setShowVideo(false);
       setShowLoading(true);
       
-      // Show loading animation for 2 seconds
+      // Show loading animation for 3 seconds (increased from 2)
       const timer1 = setTimeout(() => {
         if (animationComplete) return; // Prevent overlapping
+        console.log('Showing security tip for authenticated user');
         setShowSecurityTip(true);
         
-        // Complete the animation after showing the tip
+        // Complete the animation after showing the tip for 4 seconds (increased from 3)
         const timer2 = setTimeout(() => {
           if (animationComplete) return; // Prevent overlapping
+          console.log('Animation complete for authenticated user, calling onComplete');
           setAnimationComplete(true);
           onComplete();
-        }, 3000);
+        }, 4000);
         
         timeoutRefs.current.push(timer2);
-      }, 2000);
+      }, 3000);
       
       timeoutRefs.current.push(timer1);
 
@@ -136,8 +188,12 @@ export default function StartupAnimation({ onComplete, showGif = true }: Startup
               className="mascot-video"
               muted
               playsInline
+              preload="auto"
+              autoPlay
+              loop={false}
             >
               <source src="/animations/startup-animation.webm" type="video/webm" />
+              <source src="/animations/mascot-1.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
@@ -162,6 +218,38 @@ export default function StartupAnimation({ onComplete, showGif = true }: Startup
               <div className="tip-icon">🛡️</div>
               <p className="tip-text">{currentTip}</p>
             </div>
+          </div>
+        )}
+
+        {showSkipButton && !animationComplete && (
+          <div style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            zIndex: 1000
+          }}>
+            <button
+              onClick={handleSkip}
+              style={{
+                background: 'rgba(255,255,255,0.1)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: '20px',
+                padding: '8px 16px',
+                color: 'var(--text)',
+                fontSize: '14px',
+                cursor: 'pointer',
+                backdropFilter: 'blur(10px)',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+              }}
+            >
+              Skip Animation
+            </button>
           </div>
         )}
       </div>

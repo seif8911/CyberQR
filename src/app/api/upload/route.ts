@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+import { imgbbService } from '@/lib/imgbb-service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,38 +10,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No image file provided' }, { status: 400 });
     }
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      return NextResponse.json({ error: 'File must be an image' }, { status: 400 });
+    // Upload to imgBB
+    const result = await imgbbService.uploadQRImage(file);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error || 'Upload failed' },
+        { status: 500 }
+      );
     }
-
-    // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      return NextResponse.json({ error: 'File too large (max 10MB)' }, { status: 400 });
-    }
-
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), 'public', 'uploads');
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
-
-    // Generate unique filename
-    const timestamp = Date.now();
-    const filename = `${timestamp}-${file.name}`;
-    const filepath = join(uploadsDir, filename);
-
-    // Save file
-    await writeFile(filepath, buffer);
 
     // Return file info
     return NextResponse.json({
       success: true,
-      filename,
-      url: `/uploads/${filename}`,
+      url: result.url,
+      display_url: result.display_url,
+      thumb_url: result.thumb_url,
+      medium_url: result.medium_url,
+      delete_url: result.delete_url,
       size: file.size,
       type: file.type
     });

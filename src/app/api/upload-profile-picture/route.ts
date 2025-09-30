@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+import { imgbbService } from '@/lib/imgbb-service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,44 +14,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
+    // Upload to imgBB
+    const result = await imgbbService.uploadProfilePicture(file, userId);
+
+    if (!result.success) {
       return NextResponse.json(
-        { error: 'Only image files are allowed' },
-        { status: 400 }
+        { error: result.error || 'Upload failed' },
+        { status: 500 }
       );
     }
 
-    // Validate file size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json(
-        { error: 'File size must be less than 5MB' },
-        { status: 400 }
-      );
-    }
-
-    // Create user-pfp directory if it doesn't exist
-    const uploadDir = join(process.cwd(), 'public', 'user-pfp');
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
-
-    // Generate unique filename
-    const fileExtension = file.name.split('.').pop();
-    const fileName = `${userId}.${fileExtension}`;
-    const filePath = join(uploadDir, fileName);
-
-    // Convert file to buffer and save
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    await writeFile(filePath, buffer);
-
-    // Return the public URL
-    const publicUrl = `/user-pfp/${fileName}`;
-    
     return NextResponse.json({
       success: true,
-      url: publicUrl,
+      url: result.url,
+      display_url: result.display_url,
+      thumb_url: result.thumb_url,
+      medium_url: result.medium_url,
+      delete_url: result.delete_url,
       message: 'Profile picture uploaded successfully'
     });
 
@@ -103,3 +80,4 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
+

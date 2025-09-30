@@ -1,6 +1,10 @@
 export interface UploadResponse {
   success: boolean;
   url?: string;
+  display_url?: string;
+  thumb_url?: string;
+  medium_url?: string;
+  delete_url?: string;
   message: string;
   error?: string;
 }
@@ -61,3 +65,4 @@ export const profilePictureService = {
     }
   }
 };
+
