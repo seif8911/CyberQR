@@ -99,6 +99,10 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
 # Gemini API Configuration
 NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
+
+SAFE_BROWSING_API_KEY=Your_Api_Key
+VIRUSTOTAL_API_KEY=Your_Virustotal_api_key
+NEXT_PUBLIC_GEMINI_API_KEY=Gemini_Api_Key
 ```
 
 ### Installation
