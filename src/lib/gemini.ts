@@ -1,8 +1,16 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getICSAContext } from './icsa-data';
 
-const genAI = new GoogleGenerativeAI(
-  (process.env.GEMINI_API_KEY as string) || (process.env.NEXT_PUBLIC_GEMINI_API_KEY as string) || ''
-);
+// Initialize Gemini AI with proper error handling
+function getGeminiAI() {
+  const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  
+  if (!apiKey || apiKey === 'your_gemini_api_key_here') {
+    throw new Error('Gemini API key not configured. Please set GEMINI_API_KEY in your environment variables.');
+  }
+  
+  return new GoogleGenerativeAI(apiKey);
+}
 
 export interface SecurityAnalysisResult {
   riskLevel: 'safe' | 'caution' | 'malicious';
@@ -13,20 +21,27 @@ export interface SecurityAnalysisResult {
 }
 
 export async function analyzeUrlWithContext(url: string, context?: any): Promise<SecurityAnalysisResult> {
-  // Use Gemini 2.5 Flash-Lite as primary, with Gemini 2.0 Flash-Lite as fallback
-  const models = ['gemini-2.5-flash-lite-preview', 'gemini-2.0-flash-lite'];
-  
-  for (const modelName of models) {
-    try {
-      console.log(`Trying model: ${modelName}`);
-      const model = genAI.getGenerativeModel({ model: modelName });
+  try {
+    const genAI = getGeminiAI();
+    
+    // Use available Gemini models with fallback
+    const models = ['gemini-2.5-flash-lite'];
+    
+    for (const modelName of models) {
+      try {
+        console.log(`Trying model: ${modelName}`);
+        const model = genAI.getGenerativeModel({ model: modelName });
+      
+      const icsaContext = getICSAContext();
       
       const prompt = `
+      ${icsaContext}
+      
       Analyze this URL for cybersecurity threats: ${url}
       
       ${context ? `Context (non-PII JSON you can rely on): ${JSON.stringify(context)}` : ''}
 
-      Provide a comprehensive security analysis in JSON format with the following structure:
+      As Shieldo, the user's cute streak pet and cybersecurity AI advisor, provide a comprehensive security analysis in JSON format with the following structure:
       {
         "riskLevel": "safe" | "caution" | "malicious",
         "riskScore": number (0-100),
@@ -35,15 +50,16 @@ export async function analyzeUrlWithContext(url: string, context?: any): Promise
         "explanation": "brief user-facing explanation of what is wrong and why"
       }
       
-      Consider these factors:
+      Consider these factors (drawing from ICSA phishing detection modules):
       - URL structure and domain legitimacy
-      - Typosquatting indicators
+      - Typosquatting indicators (like paypa1.com vs paypal.com)
       - Suspicious TLDs (.tk, .ml, .cn, .ru)
-      - URL shorteners
+      - URL shorteners (bit.ly, tinyurl, etc.)
       - HTTPS vs HTTP
       - Domain age and reputation
       - Whether DNS resolves and whether HTTPS endpoint is reachable
-      - Common phishing patterns
+      - Common phishing patterns from ICSA examples
+      - Social engineering tactics used in phishing attacks
       
       Risk levels:
       - safe: Legitimate, trusted domains with HTTPS
@@ -66,12 +82,22 @@ export async function analyzeUrlWithContext(url: string, context?: any): Promise
       console.error(`Model ${modelName} failed:`, error.message);
       // Continue to next model
       continue;
+      }
     }
+    
+    // If all Gemini models fail, use fallback analysis
+    console.log('All Gemini models failed, using fallback analysis');
+    return fallbackAnalysis(url);
+    
+  } catch (error: any) {
+    console.error('Gemini API error:', error.message);
+    // If API key is not configured, use fallback analysis
+    if (error.message.includes('API key not configured')) {
+      console.log('Using fallback analysis due to missing API key');
+      return fallbackAnalysis(url);
+    }
+    throw error;
   }
-  
-  // If both Gemini 2.5 Flash-Lite and 2.0 Flash-Lite fail, use fallback analysis
-  console.log('All Gemini models failed, using fallback analysis');
-  return fallbackAnalysis(url);
 }
 
 export async function analyzeUrl(url: string): Promise<SecurityAnalysisResult> {

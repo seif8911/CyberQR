@@ -15,8 +15,11 @@ node_modules/
 .env.local
 
 #SSL
-192.168.10.3.pem
-192.168.10.3-key.pem
+192.168.10.2.pem
+192.168.10.2-key.pem
+
+# ICSA directory (separate Vite project)
+icsa/
 
 
 

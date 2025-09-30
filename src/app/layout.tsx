@@ -14,8 +14,8 @@ export const metadata: Metadata = {
   themeColor: '#f9b222',
   manifest: '/manifest.json',
   icons: {
-    icon: '/icon-192x192.png',
-    apple: '/icon-192x192.png',
+    icon: '/animations/Snapshot_3.PNG',
+    apple: '/animations/Snapshot_3.PNG',
   },
   openGraph: {
     title: 'CyberQR - Secure QR Code Scanner',

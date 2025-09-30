@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const dev = process.env.NODE_ENV !== 'production';
-const hostname = '192.168.10.3';
+const hostname = '192.168.10.2';
 const port = process.env.PORT || 3000;
 
 // Initialize Next.js app

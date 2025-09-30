@@ -17,6 +17,10 @@ export default function ResultScreen({ resultType }: ResultScreenProps) {
     if (scanHistory.length > 0) {
       const latestResult = scanHistory[0];
       setResult(latestResult);
+      // Reset modal states when result changes
+      setShowDetails(false);
+      setShowReportModal(false);
+      setShowAiModal(false);
       // Console log for debugging
       console.log('Analysis Result:', {
         url: latestResult.url,
@@ -63,20 +67,33 @@ export default function ResultScreen({ resultType }: ResultScreenProps) {
     setCurrentScreen('scan');
   };
 
+  const handleDetailsClick = () => {
+    console.log('Details button clicked, result:', result);
+    console.log('Result results array:', result?.results);
+    console.log('ShowDetails current state:', showDetails);
+    setShowDetails(true);
+  };
+
   const handleAction = (action: string) => {
     switch (action) {
       case 'scan-another':
         setCurrentScreen('scan');
         break;
       case 'proceed-caution':
-        showPet('Redirecting... Remember to stay alert! 🔍');
-        addXP(3);
+        if (result?.url) {
+          showPet('Redirecting... Remember to stay alert! 🔍');
+          addXP(3);
+          window.open(result.url, '_blank', 'noopener,noreferrer');
+        }
         break;
       case 'learn-spot':
         setCurrentScreen('lesson-spot');
         break;
       case 'visit-site':
-        showPet('Opening site... Stay vigilant! 👀');
+        if (result?.url) {
+          showPet('Opening site... Stay vigilant! 👀');
+          window.open(result.url, '_blank', 'noopener,noreferrer');
+        }
         break;
     }
   };
@@ -195,7 +212,7 @@ export default function ResultScreen({ resultType }: ResultScreenProps) {
         <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
           <button 
             className="cta secondary" 
-            onClick={() => setShowDetails(true)}
+            onClick={handleDetailsClick}
             style={{ flex: 1 }}
           >
             📊 Details
@@ -256,7 +273,7 @@ export default function ResultScreen({ resultType }: ResultScreenProps) {
               </button>
             </div>
             
-            {Array.isArray(result.results) && result.results.map((r: any, i: number) => (
+            {Array.isArray(result?.results) && result.results.length > 0 ? result.results.map((r: any, i: number) => (
               <div key={i} style={{
                 background: 'rgba(255,255,255,0.05)',
                 borderRadius: '12px',
@@ -283,7 +300,11 @@ export default function ResultScreen({ resultType }: ResultScreenProps) {
                   )}
                 </div>
               </div>
-            ))}
+            )) : (
+              <div style={{ textAlign: 'center', padding: '20px', color: 'var(--muted)' }}>
+                <p>No analysis details available</p>
+              </div>
+            )}
             
             <div style={{ marginTop: '16px', textAlign: 'center' }}>
               <button 
@@ -435,7 +456,7 @@ export default function ResultScreen({ resultType }: ResultScreenProps) {
         <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
           <button 
             className="cta secondary" 
-            onClick={() => setShowDetails(true)}
+            onClick={handleDetailsClick}
             style={{ flex: 1 }}
           >
             📊 Details
@@ -538,7 +559,7 @@ export default function ResultScreen({ resultType }: ResultScreenProps) {
         <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
           <button 
             className="cta secondary" 
-            onClick={() => setShowDetails(true)}
+            onClick={handleDetailsClick}
             style={{ flex: 1 }}
           >
             📊 Details

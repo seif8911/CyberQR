@@ -2,7 +2,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const { promisify } = require('util');
 
-console.log('🔐 Generating SSL certificates for 192.168.10.3...');
+console.log('🔐 Generating SSL certificates for 192.168.10.2...');
 
 // Generate a self-signed certificate using Node.js crypto
 function generateSelfSignedCert() {
@@ -51,12 +51,12 @@ try {
   const { privateKey, cert } = generateSelfSignedCert();
 
   // Write private key
-  fs.writeFileSync('192.168.10.3-key.pem', privateKey);
-  console.log('✅ Private key saved: 192.168.10.3-key.pem');
+  fs.writeFileSync('192.168.10.2-key.pem', privateKey);
+  console.log('✅ Private key saved: 192.168.10.2-key.pem');
 
   // Write certificate  
-  fs.writeFileSync('192.168.10.3.pem', cert);
-  console.log('✅ Certificate saved: 192.168.10.3.pem');
+  fs.writeFileSync('192.168.10.2.pem', cert);
+  console.log('✅ Certificate saved: 192.168.10.2.pem');
 
   console.log('');
   console.log('🎉 SSL certificates generated successfully!');

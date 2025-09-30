@@ -1,8 +1,8 @@
 # PowerShell script to generate SSL certificates for local development
-Write-Host "🔐 SSL Certificate Generator for 192.168.10.3" -ForegroundColor Green
+Write-Host "🔐 SSL Certificate Generator for 192.168.10.2" -ForegroundColor Green
 Write-Host "================================================" -ForegroundColor Green
 
-$certName = "192.168.10.3"
+$certName = "192.168.10.2"
 $certFile = "$certName.pem"
 $keyFile = "$certName-key.pem"
 
@@ -45,11 +45,11 @@ if ($opensslPath) {
     Write-Host "🔧 Alternative: Use mkcert (recommended)" -ForegroundColor Yellow
     Write-Host "1. Download from: https://github.com/FiloSottile/mkcert/releases" -ForegroundColor White
     Write-Host "2. Run: mkcert -install" -ForegroundColor White
-    Write-Host "3. Run: mkcert 192.168.10.3" -ForegroundColor White
+    Write-Host "3. Run: mkcert 192.168.10.2" -ForegroundColor White
     Write-Host ""
     Write-Host "📝 Or create certificates manually and place them as:" -ForegroundColor Yellow
-    Write-Host "   - 192.168.10.3.pem (certificate)" -ForegroundColor White
-    Write-Host "   - 192.168.10.3-key.pem (private key)" -ForegroundColor White
+    Write-Host "   - 192.168.10.2.pem (certificate)" -ForegroundColor White
+    Write-Host "   - 192.168.10.2-key.pem (private key)" -ForegroundColor White
 }
 
 Write-Host ""

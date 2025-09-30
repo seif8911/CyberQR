@@ -6,6 +6,12 @@ import HomeScreen from './screens/HomeScreen';
 import ScannerScreen from './screens/ScannerScreen';
 import ResultScreen from './screens/ResultScreen';
 import ICSAHubScreen from './screens/ICSAHubScreen';
+import PhishingIntroScreen from './screens/PhishingIntroScreen';
+import PhishingGameScreen from './screens/PhishingGameScreen';
+import SecureCodingIntroScreen from './screens/SecureCodingIntroScreen';
+import SecureCodingGameScreen from './screens/SecureCodingGameScreen';
+import LeastPrivilegeIntroScreen from './screens/LeastPrivilegeIntroScreen';
+import LeastPrivilegeGameScreen from './screens/LeastPrivilegeGameScreen';
 import EducationScreen from './screens/EducationScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
 
@@ -34,6 +40,14 @@ export default function ScreenManager({ currentScreen }: ScreenManagerProps) {
     'result-caution',
     'result-malicious',
     'icsa',
+    'phishing-intro',
+    'phishing-game',
+    'secure-coding-intro',
+    'secure-coding-game',
+    'least-privilege-intro',
+    'least-privilege-game',
+    'encryption-intro',
+    'security-quiz-intro',
     'lesson-spot',
     'lesson-url',
     'lesson-phishing',
@@ -61,6 +75,22 @@ export default function ScreenManager({ currentScreen }: ScreenManagerProps) {
         return <ResultScreen resultType={screenId} />;
       case 'icsa':
         return <ICSAHubScreen />;
+      case 'phishing-intro':
+        return <PhishingIntroScreen />;
+      case 'phishing-game':
+        return <PhishingGameScreen />;
+      case 'secure-coding-intro':
+        return <SecureCodingIntroScreen />;
+      case 'secure-coding-game':
+        return <SecureCodingGameScreen />;
+      case 'least-privilege-intro':
+        return <LeastPrivilegeIntroScreen />;
+      case 'least-privilege-game':
+        return <LeastPrivilegeGameScreen />;
+      case 'encryption-intro':
+        return <EducationScreen lessonType="encryption-intro" />;
+      case 'security-quiz-intro':
+        return <EducationScreen lessonType="security-quiz-intro" />;
       case 'lesson-spot':
       case 'lesson-url':
       case 'lesson-phishing':

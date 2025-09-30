@@ -9,6 +9,7 @@ export default function Navigation() {
     { id: 'home', icon: '🏠', label: 'Home' },
     { id: 'scan', icon: '📱', label: 'Scanner' },
     { id: 'icsa', icon: '🎯', label: 'ICSA Hub' },
+    { id: 'profile', icon: '👤', label: 'Profile' },
   ];
 
   const handleNavClick = (screenId: string) => {

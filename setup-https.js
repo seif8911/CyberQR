@@ -6,18 +6,18 @@ console.log('=====================');
 
 // Check for certificate files in common locations
 const possibleLocations = [
-  './192.168.10.3.pem',
-  './192.168.10.3-key.pem',
-  '../192.168.10.3.pem',
-  '../192.168.10.3-key.pem',
-  '~/192.168.10.3.pem',
-  '~/192.168.10.3-key.pem',
+  './192.168.10.2.pem',
+  './192.168.10.2-key.pem',
+  '../192.168.10.2.pem',
+  '../192.168.10.2-key.pem',
+  '~/192.168.10.2.pem',
+  '~/192.168.10.2-key.pem',
 ];
 
 console.log('\nChecking for SSL certificate files...');
 
-const certPath = path.join(__dirname, '192.168.10.3.pem');
-const keyPath = path.join(__dirname, '192.168.10.3-key.pem');
+const certPath = path.join(__dirname, '192.168.10.2.pem');
+const keyPath = path.join(__dirname, '192.168.10.2-key.pem');
 
 let foundCert = false;
 let foundKey = false;
@@ -43,8 +43,8 @@ if (foundCert && foundKey) {
 } else {
   console.log('\n📋 To set up HTTPS, please:');
   console.log('1. Copy your SSL certificate files to the project root:');
-  console.log('   - 192.168.10.3.pem (certificate)');
-  console.log('   - 192.168.10.3-key.pem (private key)');
+  console.log('   - 192.168.10.2.pem (certificate)');
+  console.log('   - 192.168.10.2-key.pem (private key)');
   console.log('\n2. Then run: npm run dev:https');
   console.log('\n💡 If you need to generate SSL certificates, you can use:');
   console.log('   - mkcert (recommended): https://github.com/FiloSottile/mkcert');
