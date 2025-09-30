@@ -37,20 +37,8 @@ export class TwoFactorAuthService {
       }
       
       // If standard fails, try with a very generous time window (±5 minutes)
-      const currentTime = Math.floor(Date.now() / 1000);
-      const timeStep = 30; // 30 seconds per step
-      const window = 10; // 10 steps = 5 minutes in each direction
-      
-      for (let i = -window; i <= window; i++) {
-        const testTime = currentTime + (i * timeStep);
-        const testCode = authenticator.generate(secret, { epoch: testTime });
-        
-        if (testCode === code) {
-          return true;
-        }
-      }
-      
-      return false;
+      // Use the built-in time window verification
+      return authenticator.verify({ token: code, secret });
     } catch (error) {
       console.error('TOTP verification error:', error);
       return false;
@@ -126,8 +114,8 @@ export class TwoFactorAuthService {
   static async disable2FA(uid: string): Promise<void> {
     await authService.updateUserData(uid, {
       twoFactorEnabled: false,
-      twoFactorSecret: null,
-      twoFactorBackupCodes: null
+      twoFactorSecret: undefined,
+      twoFactorBackupCodes: undefined
     });
   }
 }

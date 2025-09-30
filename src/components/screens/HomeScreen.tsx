@@ -20,7 +20,7 @@ export default function HomeScreen() {
   };
 
   const xpPercentage = user ? (user.xp % 100) : 0;
-  const nextLevelXP = 100 - (user?.xp % 100) || 100;
+  const nextLevelXP = 100 - ((user?.xp || 0) % 100);
 
   return (
     <div style={{

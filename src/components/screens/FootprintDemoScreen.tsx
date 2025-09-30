@@ -65,7 +65,7 @@ export default function FootprintDemoScreen() {
     if (placedItems.find(p => p.id === item.id)) return;
     
     // For mobile: automatically place in correct zone
-    const zone = item.isPrivate ? 'private' : 'safe';
+    const zone: 'safe' | 'private' = item.isPrivate ? 'private' : 'safe';
     const newItem = { ...item, zone };
     setPlacedItems(prev => [...prev, newItem]);
     setScore(prev => prev + 10);

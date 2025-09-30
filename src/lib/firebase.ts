@@ -70,6 +70,8 @@ export interface FirestoreUser {
   lastActive: Date;
   premium: boolean;
   twoFactorEnabled: boolean;
+  twoFactorSecret?: string;
+  twoFactorBackupCodes?: string[];
   phoneNumber?: string;
   petPositions?: {
     desktop?: PetPosition;
@@ -135,9 +137,9 @@ export const authService = {
 
   // Phone Authentication
   async sendPhoneVerification(phoneNumber: string) {
-    const recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+    const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
       size: 'invisible',
-    }, auth);
+    });
     
     const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
     return confirmationResult;
@@ -172,13 +174,6 @@ export const authService = {
     return userData;
   },
 
-  async getUserData(uid: string): Promise<FirestoreUser | null> {
-    const userDoc = await getDoc(doc(db, 'users', uid));
-    if (userDoc.exists()) {
-      return userDoc.data() as FirestoreUser;
-    }
-    return null;
-  },
 
   async updateUserData(uid: string, data: Partial<FirestoreUser>) {
     await updateDoc(doc(db, 'users', uid), {

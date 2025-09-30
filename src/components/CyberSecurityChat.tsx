@@ -55,7 +55,7 @@ export default function CyberSecurityChat({ isOpen, onClose }: { isOpen: boolean
       unlockedBadges: badges.filter(b => b.unlocked).length,
       recentScans: scanHistory.slice(-5).map(scan => ({
         url: scan.url,
-        result: scan.result,
+        result: scan.results,
         timestamp: scan.timestamp
       }))
     };

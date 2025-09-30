@@ -291,6 +291,13 @@ export const useAppStore = create<AppState>()(
                 // Create user document if it doesn't exist
                 await authService.createUserDocument(firebaseUser, firebaseUser.displayName || 'User');
                 const newUserData = await authService.getUserData(firebaseUser.uid);
+                
+                if (!newUserData) {
+                  console.error('Failed to get user data after creating user document');
+                  set({ isLoading: false });
+                  return;
+                }
+                
                 // Update streak for new users too
                 const updatedStreak = await authService.updateStreak(firebaseUser.uid);
                 

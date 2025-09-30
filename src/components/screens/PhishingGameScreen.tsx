@@ -182,7 +182,7 @@ export default function PhishingGameScreen() {
   const currentEmailData = phishingEmails[currentEmail];
 
   if (gameCompleted) {
-    const finalScore = score + (selectedAnswer === phishingEmails[currentEmail].isPhishing ? 10 : 0);
+    const finalScore = score + (selectedAnswer === (phishingEmails[currentEmail].isPhishing ? 'phishing' : 'legitimate') ? 10 : 0);
     const percentage = (finalScore / 100) * 100;
     
     return (

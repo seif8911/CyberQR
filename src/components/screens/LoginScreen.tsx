@@ -43,7 +43,7 @@ export default function LoginScreen() {
       const userData = credentialCheck.userData;
       
       // Check if user has 2FA enabled
-      console.log('User data for 2FA check:', { uid: user.uid, twoFactorEnabled: userData?.twoFactorEnabled });
+      console.log('User data for 2FA check:', { uid: user?.uid, twoFactorEnabled: userData?.twoFactorEnabled });
       
       if (userData?.twoFactorEnabled) {
         console.log('2FA is enabled, showing verification screen');
@@ -55,7 +55,7 @@ export default function LoginScreen() {
         setIsLoading(false);
         console.log('2FA verification screen should now be visible');
         console.log('Current screen state:', { show2FA, is2FAVerificationInProgress: true });
-        console.log('Pending user data:', { uid: user.uid, email: user.email });
+        console.log('Pending user data:', { uid: user?.uid, email: user?.email });
         return;
       }
       
