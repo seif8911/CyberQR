@@ -38,14 +38,14 @@ export const profilePictureService = {
     }
   },
 
-  async deleteProfilePicture(userId: string): Promise<UploadResponse> {
+  async deleteProfilePicture(deleteUrl: string): Promise<UploadResponse> {
     try {
       const response = await fetch('/api/upload-profile-picture', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ deleteUrl }),
       });
 
       const result = await response.json();

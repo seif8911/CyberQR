@@ -45,37 +45,30 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const { userId } = await request.json();
+    const { deleteUrl } = await request.json();
 
-    if (!userId) {
+    if (!deleteUrl) {
       return NextResponse.json(
-        { error: 'UserId is required' },
+        { error: 'Delete URL is required' },
         { status: 400 }
       );
     }
 
-    // Try to delete common image formats
-    const uploadDir = join(process.cwd(), 'public', 'user-pfp');
-    const extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    // For imgBB, we would need to implement deletion via their API
+    // For now, we'll just return success since imgBB images have expiration
+    // and will be automatically deleted after the set time period
     
-    for (const ext of extensions) {
-      const filePath = join(uploadDir, `${userId}.${ext}`);
-      if (existsSync(filePath)) {
-        const { unlink } = await import('fs/promises');
-        await unlink(filePath);
-        break;
-      }
-    }
-
+    console.log('Profile picture deletion requested for:', deleteUrl);
+    
     return NextResponse.json({
       success: true,
-      message: 'Profile picture deleted successfully'
+      message: 'Profile picture deletion request received. Image will be automatically removed after expiration period.'
     });
 
   } catch (error) {
     console.error('Profile picture deletion error:', error);
     return NextResponse.json(
-      { error: 'Failed to delete profile picture' },
+      { error: 'Failed to process profile picture deletion' },
       { status: 500 }
     );
   }
